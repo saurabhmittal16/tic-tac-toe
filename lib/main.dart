@@ -30,20 +30,32 @@ class _GameState extends State<Game> {
   List<String> game = new List.filled(9, '');
   bool isFirst = true;
   bool gameOver = false;
+  int moves = 0;
   
   onClick(int index) {
     if (game[index] == '') {
       setState(() {
         game[index] = isFirst ? 'O' : 'X';
         isFirst = !isFirst;
+        moves++;
       });
     }
   }
 
+  reset() {
+    setState(() {
+      game.fillRange(0, 8, '');
+      isFirst = true;
+      gameOver = false;
+      moves = 0;
+    });
+  }
+
   checkVictory() {
     print(game);
+
     // Check rows
-    for(int i=0; i<3; i++) {
+    for(int i=0; i<9; i+=3) {
       if (game[i] == game[i+1] && game[i+1] == game[i+2] && game[i] != '') {
         setState(() {
           gameOver = true;
@@ -80,7 +92,8 @@ class _GameState extends State<Game> {
       } else if (game[0] == 'X') {
         print('Player 2 wins');
       }
-    } 
+    }
+
     // Check secondary diagonal
     else if (game[2] == game[4] && game[4] == game[6] && game[2] != '') {
       setState(() {
@@ -91,6 +104,13 @@ class _GameState extends State<Game> {
       } else if (game[0] == 'X') {
         print('Player 2 wins');
       }
+    }
+
+    if (moves == 9) {
+      print('Tie');
+      setState(() {
+        gameOver = true;
+      });
     }
   }
 
