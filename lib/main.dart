@@ -31,6 +31,7 @@ class _GameState extends State<Game> {
   bool isFirst = true;
   bool gameOver = false;
   int moves = 0;
+  int result = 0;
   
   onClick(int index) {
     if (game[index] == '') {
@@ -44,10 +45,11 @@ class _GameState extends State<Game> {
 
   reset() {
     setState(() {
-      game.fillRange(0, 8, '');
+      game.fillRange(0, 9, '');
       isFirst = true;
       gameOver = false;
       moves = 0;
+      result = 0;
     });
   }
 
@@ -61,9 +63,9 @@ class _GameState extends State<Game> {
           gameOver = true;
         });
         if (game[i] == 'O') {
-          print('Player 1 wins');
+          result = 1;
         } else if (game[i] == 'X') {
-          print('Player 2 wins');
+          result = 2;
         }
       }
     }
@@ -75,9 +77,9 @@ class _GameState extends State<Game> {
           gameOver = true;
         });
         if (game[i] == 'O') {
-          print('Player 1 wins');
+          result = 1;
         } else if (game[i] == 'X') {
-          print('Player 2 wins');
+          result = 2;
         }
       }
     }
@@ -88,26 +90,26 @@ class _GameState extends State<Game> {
         gameOver = true;
       });
       if (game[0] == 'O') {
-        print('Player 1 wins');
+        result = 1;
       } else if (game[0] == 'X') {
-        print('Player 2 wins');
+        result = 2;
       }
     }
-
+    
     // Check secondary diagonal
     else if (game[2] == game[4] && game[4] == game[6] && game[2] != '') {
       setState(() {
         gameOver = true;
       });
       if (game[0] == 'O') {
-        print('Player 1 wins');
+        result = 1;
       } else if (game[0] == 'X') {
-        print('Player 2 wins');
+        result = 2;
       }
     }
 
     if (moves == 9) {
-      print('Tie');
+      result = 0;
       setState(() {
         gameOver = true;
       });
@@ -116,20 +118,49 @@ class _GameState extends State<Game> {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      padding: EdgeInsets.symmetric(vertical: 32, horizontal: 16),
-      crossAxisCount: 3,
-      children: List.generate(9, (index) {
-        return GestureDetector(
-          onTap: () {
-            if (!gameOver) {
-              onClick(index);
-              checkVictory();
-            }
-          },
-          child: getTile(index, game[index]),
-        );
-      }),
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: GridView.count(
+            padding: EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+            crossAxisCount: 3,
+            children: List.generate(9, (index) {
+              return GestureDetector(
+                onTap: () {
+                  if (!gameOver) {
+                    onClick(index);
+                    checkVictory();
+                  }
+                },
+                child: getTile(index, game[index]),
+              );
+            }),
+          )
+        ),
+        Opacity(
+          opacity: gameOver ? 1.0 : 0.0, 
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: 36.0,
+            ),
+            child: Text(showResult(result), style: TextStyle(fontSize: 26))
+          )
+        ),
+        Opacity(
+          opacity: gameOver ? 1.0 : 0.0,
+          child: Padding(
+            padding: EdgeInsets.only(
+              bottom: 32.0,
+            ),
+            child: GestureDetector(
+              onTap: () {
+                reset();
+              },
+              child: Text('Play Again? Click here', style: TextStyle(fontSize: 20)),
+            )
+          )
+        ),
+      ],
     );
   }
 }
