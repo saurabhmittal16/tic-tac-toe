@@ -21,6 +21,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// 2 Player Game
+// Player 1 is 'O'
+// Player 2 is 'X'
+
 class Game extends StatefulWidget {
   @override
   _GameState createState() => _GameState();
@@ -61,12 +65,12 @@ class _GameState extends State<Game> {
       if (game[i] == game[i+1] && game[i+1] == game[i+2] && game[i] != '') {
         setState(() {
           gameOver = true;
+          if (game[i] == 'O') {
+            result = 1;
+          } else if (game[i] == 'X') {
+            result = 2;
+          }
         });
-        if (game[i] == 'O') {
-          result = 1;
-        } else if (game[i] == 'X') {
-          result = 2;
-        }
       }
     }
 
@@ -75,12 +79,12 @@ class _GameState extends State<Game> {
       if (game[i] == game[i+3] && game[i+3] == game[i+6] && game[i] != '') {
         setState(() {
           gameOver = true;
+          if (game[i] == 'O') {
+            result = 1;
+          } else if (game[i] == 'X') {
+            result = 2;
+          }
         });
-        if (game[i] == 'O') {
-          result = 1;
-        } else if (game[i] == 'X') {
-          result = 2;
-        }
       }
     }
 
@@ -88,30 +92,30 @@ class _GameState extends State<Game> {
     if (game[0] == game[4] && game[4] == game[8] && game[0] != '') {
       setState(() {
         gameOver = true;
+        if (game[0] == 'O') {
+          result = 1;
+        } else if (game[0] == 'X') {
+          result = 2;
+        }
       });
-      if (game[0] == 'O') {
-        result = 1;
-      } else if (game[0] == 'X') {
-        result = 2;
-      }
     }
-    
+
     // Check secondary diagonal
     else if (game[2] == game[4] && game[4] == game[6] && game[2] != '') {
       setState(() {
-        gameOver = true;
+        gameOver = true;  
+        if (game[2] == 'O') {
+          result = 1;
+        } else if (game[2] == 'X') {
+          result = 2;
+        }
       });
-      if (game[0] == 'O') {
-        result = 1;
-      } else if (game[0] == 'X') {
-        result = 2;
-      }
     }
 
     if (moves == 9) {
-      result = 0;
       setState(() {
         gameOver = true;
+        result = 0;
       });
     }
   }
