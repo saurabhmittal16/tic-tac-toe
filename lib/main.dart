@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'utils.dart';
+import 'utils.dart' as utils;
+import 'move.dart';
 
 void main() => runApp(MyApp());
 
@@ -39,7 +40,7 @@ class _GameState extends State<Game> {
   int moves = 0;
   int result = 0;
   
-  onClick(int index) {
+  void onClick(int index) {
     if (game[index] == '') {
       setState(() {
         game[index] = 'O';
@@ -48,7 +49,7 @@ class _GameState extends State<Game> {
     }
   }
 
-  reset() {
+  void reset() {
     setState(() {
       game.fillRange(0, 9, '');
       gameOver = false;
@@ -57,73 +58,28 @@ class _GameState extends State<Game> {
     });
   }
 
-  checkVictory() {
+  void checkVictory() {
     print(game);
+    print(utils.isEndState(game));
 
-    // Check rows
-    for(int i=0; i<9; i+=3) {
-      if (game[i] == game[i+1] && game[i+1] == game[i+2] && game[i] != '') {
-        setState(() {
-          gameOver = true;
-          if (game[i] == 'O') {
-            result = 1;
-          } else if (game[i] == 'X') {
-            result = 2;
-          }
-        });
-      }
-    }
-
-    // Check columns
-    for(int i=0; i<3; i++) {
-      if (game[i] == game[i+3] && game[i+3] == game[i+6] && game[i] != '') {
-        setState(() {
-          gameOver = true;
-          if (game[i] == 'O') {
-            result = 1;
-          } else if (game[i] == 'X') {
-            result = 2;
-          }
-        });
-      }
-    }
-
-    // Check primary diagonal
-    if (game[0] == game[4] && game[4] == game[8] && game[0] != '') {
+    int res = utils.findResult(game);
+    if (res != -1) {
       setState(() {
+        result = res;
         gameOver = true;
-        if (game[0] == 'O') {
-          result = 1;
-        } else if (game[0] == 'X') {
-          result = 2;
-        }
-      });
-    }
-
-    // Check secondary diagonal
-    else if (game[2] == game[4] && game[4] == game[6] && game[2] != '') {
-      setState(() {
-        gameOver = true;  
-        if (game[2] == 'O') {
-          result = 1;
-        } else if (game[2] == 'X') {
-          result = 2;
-        }
-      });
-    }
-
-    if (moves == 9) {
-      setState(() {
-        gameOver = true;
-        result = 0;
       });
     }
   }
 
   gameMove() {
     if (!gameOver) {
-      print('Game makes move');
-      // Make a move
+      Move best = utils.minimiser(game, 0);
+      print('Game sets -> ${best.index}');
+      
+      setState(() {
+        game[best.index] = 'X';
+        moves++;
+      });
 
       checkVictory();
     }
@@ -146,7 +102,7 @@ class _GameState extends State<Game> {
                     gameMove();
                   }
                 },
-                child: getTile(index, game[index]),
+                child: utils.getTile(index, game[index]),
               );
             }),
           )
@@ -157,7 +113,7 @@ class _GameState extends State<Game> {
             padding: EdgeInsets.only(
               bottom: 36.0,
             ),
-            child: Text(showResult(result), style: TextStyle(fontSize: 26))
+            child: Text(utils.showResult(result), style: TextStyle(fontSize: 26))
           )
         ),
         Opacity(
