@@ -27,7 +27,72 @@ class Game extends StatefulWidget {
 }
 
 class _GameState extends State<Game> {
-  List<String> game = ['X','O',' ','X',' ','X','X','O','X'];
+  List<String> game = new List.filled(9, '');
+  bool isFirst = true;
+  bool gameOver = false;
+  
+  onClick(int index) {
+    if (game[index] == '') {
+      setState(() {
+        game[index] = isFirst ? 'O' : 'X';
+        isFirst = !isFirst;
+      });
+    }
+  }
+
+  checkVictory() {
+    print(game);
+    // Check rows
+    for(int i=0; i<3; i++) {
+      if (game[i] == game[i+1] && game[i+1] == game[i+2] && game[i] != '') {
+        setState(() {
+          gameOver = true;
+        });
+        if (game[i] == 'O') {
+          print('Player 1 wins');
+        } else if (game[i] == 'X') {
+          print('Player 2 wins');
+        }
+      }
+    }
+
+    // Check columns
+    for(int i=0; i<3; i++) {
+      if (game[i] == game[i+3] && game[i+3] == game[i+6] && game[i] != '') {
+        setState(() {
+          gameOver = true;
+        });
+        if (game[i] == 'O') {
+          print('Player 1 wins');
+        } else if (game[i] == 'X') {
+          print('Player 2 wins');
+        }
+      }
+    }
+
+    // Check primary diagonal
+    if (game[0] == game[4] && game[4] == game[8] && game[0] != '') {
+      setState(() {
+        gameOver = true;
+      });
+      if (game[0] == 'O') {
+        print('Player 1 wins');
+      } else if (game[0] == 'X') {
+        print('Player 2 wins');
+      }
+    } 
+    // Check secondary diagonal
+    else if (game[2] == game[4] && game[4] == game[6] && game[2] != '') {
+      setState(() {
+        gameOver = true;
+      });
+      if (game[0] == 'O') {
+        print('Player 1 wins');
+      } else if (game[0] == 'X') {
+        print('Player 2 wins');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +102,10 @@ class _GameState extends State<Game> {
       children: List.generate(9, (index) {
         return GestureDetector(
           onTap: () {
-            print(game[index]);
+            if (!gameOver) {
+              onClick(index);
+              checkVictory();
+            }
           },
           child: getTile(index, game[index]),
         );
