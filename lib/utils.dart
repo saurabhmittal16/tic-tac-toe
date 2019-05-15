@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 String showResult(int playerNumber) {
     if (playerNumber == 0)
         return 'Tie';
-    return 'Player $playerNumber wins!';
+    else if (playerNumber == 1)
+        return 'You won!';
+    else return 'You lost!';
 }
 
 Widget getTile (int index, String text) {

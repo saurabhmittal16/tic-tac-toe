@@ -21,9 +21,12 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// 2 Player Game
-// Player 1 is 'O'
-// Player 2 is 'X'
+// 1 Player Game
+// User goes first and uses 'O'
+// Game goes second and uses 'X'
+// result = 0 -> Tie
+// result = 1 -> Player won
+// result = 2 -> Game won
 
 class Game extends StatefulWidget {
   @override
@@ -32,7 +35,6 @@ class Game extends StatefulWidget {
 
 class _GameState extends State<Game> {
   List<String> game = new List.filled(9, '');
-  bool isFirst = true;
   bool gameOver = false;
   int moves = 0;
   int result = 0;
@@ -40,8 +42,7 @@ class _GameState extends State<Game> {
   onClick(int index) {
     if (game[index] == '') {
       setState(() {
-        game[index] = isFirst ? 'O' : 'X';
-        isFirst = !isFirst;
+        game[index] = 'O';
         moves++;
       });
     }
@@ -50,7 +51,6 @@ class _GameState extends State<Game> {
   reset() {
     setState(() {
       game.fillRange(0, 9, '');
-      isFirst = true;
       gameOver = false;
       moves = 0;
       result = 0;
@@ -120,6 +120,15 @@ class _GameState extends State<Game> {
     }
   }
 
+  gameMove() {
+    if (!gameOver) {
+      print('Game makes move');
+      // Make a move
+
+      checkVictory();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -134,6 +143,7 @@ class _GameState extends State<Game> {
                   if (!gameOver) {
                     onClick(index);
                     checkVictory();
+                    gameMove();
                   }
                 },
                 child: getTile(index, game[index]),
