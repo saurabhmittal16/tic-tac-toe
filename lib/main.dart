@@ -46,6 +46,8 @@ class _GameState extends State<Game> {
         game[index] = 'O';
         moves++;
       });
+      checkVictory();
+      gameMove();
     }
   }
 
@@ -98,8 +100,6 @@ class _GameState extends State<Game> {
                 onTap: () {
                   if (!gameOver) {
                     onClick(index);
-                    checkVictory();
-                    gameMove();
                   }
                 },
                 child: utils.getTile(index, game[index]),
