@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'utils.dart' as utils;
 import 'move.dart';
@@ -13,11 +14,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.purple,
       ),
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Tic Tac Toe'),
-        ),
-        body: Game()
-      ),
+          appBar: AppBar(
+            title: Text('Tic Tac Toe'),
+          ),
+          body: Game()),
     );
   }
 }
@@ -39,7 +39,7 @@ class _GameState extends State<Game> {
   bool gameOver = false;
   int moves = 0;
   int result = 0;
-  
+
   void onClick(int index) {
     if (game[index] == '') {
       setState(() {
@@ -77,7 +77,7 @@ class _GameState extends State<Game> {
     if (!gameOver) {
       Move best = utils.minimiser(game, 0);
       print('Game sets -> ${best.index}');
-      
+
       setState(() {
         game[best.index] = 'X';
         moves++;
@@ -89,48 +89,60 @@ class _GameState extends State<Game> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-          child: GridView.count(
-            padding: EdgeInsets.symmetric(vertical: 32, horizontal: 16),
-            crossAxisCount: 3,
-            children: List.generate(9, (index) {
-              return GestureDetector(
-                onTap: () {
-                  if (!gameOver) {
-                    onClick(index);
-                  }
-                },
-                child: utils.getTile(index, game[index]),
-              );
-            }),
-          )
-        ),
-        Opacity(
-          opacity: gameOver ? 1.0 : 0.0, 
-          child: Padding(
-            padding: EdgeInsets.only(
-              bottom: 36.0,
-            ),
-            child: Text(utils.showResult(result), style: TextStyle(fontSize: 26))
-          )
-        ),
-        Opacity(
-          opacity: gameOver ? 1.0 : 0.0,
-          child: Padding(
-            padding: EdgeInsets.only(
-              bottom: 32.0,
-            ),
-            child: GestureDetector(
-              onTap: () {
-                reset();
-              },
-              child: Text('Play Again? Click here', style: TextStyle(fontSize: 20)),
-            )
-          )
-        ),
-      ],
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                  child: Container(
+                width: kIsWeb
+                    ? MediaQuery.of(context).size.width > 300
+                        ? 300
+                        : MediaQuery.of(context).size.width
+                    : MediaQuery.of(context).size.width,
+                child: GridView.count(
+                  padding: EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+                  crossAxisCount: 3,
+                  children: List.generate(9, (index) {
+                    return GestureDetector(
+                      onTap: () {
+                        if (!gameOver) {
+                          onClick(index);
+                        }
+                      },
+                      child: utils.getTile(index, game[index]),
+                    );
+                  }),
+                ),
+              )),
+              Opacity(
+                  opacity: gameOver ? 1.0 : 0.0,
+                  child: Padding(
+                      padding: EdgeInsets.only(
+                        bottom: 36.0,
+                      ),
+                      child: Text(utils.showResult(result),
+                          style: TextStyle(fontSize: 26)))),
+              Opacity(
+                  opacity: gameOver ? 1.0 : 0.0,
+                  child: Padding(
+                      padding: EdgeInsets.only(
+                        bottom: 32.0,
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          reset();
+                        },
+                        child: Text('Play Again? Click here',
+                            style: TextStyle(fontSize: 20)),
+                      ))),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
