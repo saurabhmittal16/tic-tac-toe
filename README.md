@@ -1,6 +1,6 @@
 # Tic-Tac-Toe
 
-Unbeatable Tic-Tac-Toe built using Minimax Algorithm with Flutter.  
+Unbeatable Tic-Tac-Toe built using Minimax Algorithm with Flutter. [View it Online](https://saurabhmittal16.github.io/tic-tac-toe/)
 
 ![Screenshot](static/1.gif)
 
